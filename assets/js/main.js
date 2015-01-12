@@ -20,11 +20,9 @@
     $scope.submitToDelete = function(){
       ListDataService
         .deleteSelected($scope.selectedTasks)
-        .success(function(data){
+        .finally(function(data){
           // Delete from array here.
-          // _.each($scope.selectedTasks, function(task){
-
-          // });
+          $scope.todos = _.difference($scope.todos, $scope.selectedTasks);
           $scope.selectedTasks = ListDataService.clearSelected();
         });
     }
