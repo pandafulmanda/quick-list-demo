@@ -2,6 +2,8 @@
 <html>
 <head>
   <title>Quick List Demo</title>
+  <link rel="stylesheet" type="text/css" href="./assets/vendor/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./assets/css/main.css">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
   <script type="text/javascript" src="./assets/js/vendor/angular.min.js"></script>
 </head>
@@ -9,13 +11,16 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12" ng-controller="QuickList">
-        <ul>
-          <li ng-repeat="todo in todos">
-            <input type="checkbox" name="selectedTasks" ng-model='selectedTask' ng-change="addToSelected(todo)">
-            <a href="{{todo.id}}">{{todo.task}}</a>
-          </li>
-        </ul>
-        <button ng-click="submitToDelete()">Submit</button>
+        <h1>Todo List</h1>
+        <div class="list-group form-group">
+          <div ng-repeat="todo in todos" class="checkbox list-group-item">
+            <label>
+              <input type="checkbox" name="selectedTasks" ng-model='selectedTask' ng-change="addToSelected(todo)">
+              {{todo.task}}
+            </label>
+          </div>
+        </div>
+        <button ng-click="submitToDelete()" class="btn btn-primary">Delete Selected</button>
       </div>
     </div>
   </div>

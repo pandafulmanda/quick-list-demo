@@ -1,4 +1,4 @@
-(function(window, angular, undefined){
+(function(window, angular, _, undefined){
 
   angular.module('quickListDemo', [])
     .controller('QuickList', QuickListCtrl)
@@ -10,27 +10,31 @@
   function QuickListCtrl($scope, ListDataService){
 
     $scope.todos = ListDataService.get();
-    $scope.selectedTasks = [];
 
-    $scope.addToSelected = function(todo){
-      $scope.selectedTasks = ListDataService.addToSelected(todo);
-      console.log($scope.selectedTasks);
-    };
+    $scope.addToSelected = ListDataService.addToSelected;
 
-    $scope.submitToDelete = function(){
+    $scope.submitToDelete = submitToDelete;
+
+
+
+    function submitToDelete(){
       ListDataService
-        .deleteSelected($scope.selectedTasks)
-        .finally(function(data){
-          // Delete from array here.
-          $scope.todos = _.difference($scope.todos, $scope.selectedTasks);
-          $scope.selectedTasks = ListDataService.clearSelected();
+        .deleteSelected()
+        .then(function(deleted){
+
+          // Pretending to get the deleted items back from a backend DELETE
+          // Updating frontend todos accordingly.
+          $scope.todos = _.difference($scope.todos, deleted);
+
+          // clear selected list
+          ListDataService.clearSelected();
         });
     }
 
   }
 
 
-  function ListDataSrv($http){
+  function ListDataSrv($http, $q){
 
     var selected = [];
 
@@ -58,11 +62,23 @@
         selected = [];
         return selected;
       },
-      deleteSelected: function(list){
-        return $http.delete('/list', list);
+      deleteSelected: function(){
+        return $http
+          .delete('/list', selected)
+          .then(_getDeletedListPromise, _getDeletedListPromise);
       }
     };
+
+    function _getDeletedListPromise(){
+      // chain a promise that returns the "deleted" items
+      var deleted = selected,
+        deferred = $q.defer();
+
+      deferred.resolve(selected);
+      return deferred.promise;
+    }
+
   }
 
 
-})(window, angular);
+})(window, angular, _);
