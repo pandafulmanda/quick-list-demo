@@ -1,0 +1,6 @@
+.checkbox.list-group-item:hover{
+  background: #ebebeb;
+}
+.checkbox.list-group-item label{
+  display: block;
+}
